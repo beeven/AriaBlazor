@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using AriaBlazor.Models;
 
 namespace AriaBlazor.Services
 {
@@ -8,6 +9,7 @@ namespace AriaBlazor.Services
     {
         Task InitializeAsync();
         Task<AriaVersion> GetVersionAsync();
+        Task<AriaTaskStatus[]> GetActiveAsync();
         Task<AriaTaskStatus[]> GetActiveAsync(string[] keys);
     }
 }

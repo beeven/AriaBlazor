@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Json;
 using StreamJsonRpc;
 using System.Net.WebSockets;
+using AriaBlazor.Models;
 
 namespace AriaBlazor.Services
 {
@@ -18,7 +19,11 @@ namespace AriaBlazor.Services
         public WebSocketTaskManager(string rpcUri, string secret)
         {
             this._rpcUri = rpcUri;
-            this._secret = "token:"+secret;
+            if(string.IsNullOrEmpty(secret)) {
+                this._secret = "";
+            } else {
+                this._secret = "token:"+secret;
+            }
             this._tokenSource = new CancellationTokenSource();
             var handler = new StreamJsonRpc.WebSocketMessageHandler(_socks);
             _rpc = new JsonRpc(handler);
@@ -29,9 +34,14 @@ namespace AriaBlazor.Services
             await _socks.ConnectAsync(new Uri(_rpcUri), _tokenSource.Token);
             _rpc.StartListening();
         }
-        public Task<AriaTaskStatus[]> GetActiveAsync(string[] keys)
+
+        public async Task<AriaTaskStatus[]> GetActiveAsync()
         {
-            throw new NotImplementedException();
+            return await _rpc.InvokeAsync<AriaTaskStatus[]>("aria2.tellActive", _secret);
+        }
+        public async Task<AriaTaskStatus[]> GetActiveAsync(string[] keys)
+        {
+            return await _rpc.InvokeAsync<AriaTaskStatus[]>("aria2.tellActive", _secret, keys);
         }
 
         public async Task<AriaVersion> GetVersionAsync()

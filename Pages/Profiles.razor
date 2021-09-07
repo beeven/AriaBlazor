@@ -1,0 +1,75 @@
+@page "/profiles"
+@using AriaBlazor.Services
+@using AriaBlazor.Models
+
+<div class="pa-2">
+    <MudExpansionPanels>
+        @foreach (var item in profiles)
+        {
+            <MudExpansionPanel>
+           <TitleContent>
+               <div class="d-flex">
+                   <MudText>@item.Name</MudText>
+                        @if(selectedProfile == item)
+                        {
+                            <MudChip Size="Size.Small" Color="Color.Success">Active</MudChip>
+                        }
+                   
+                   <MudIcon Class="ml-auto" Icon="@Icons.Material.Filled.Close"></MudIcon>
+               </div>
+           </TitleContent>
+           <ChildContent>
+               <MudGrid>
+                   <MudItem xs="12" sm="6">
+                       <MudTextField @bind-Value="@item.Name" Label="Name" HelperText="Profile name" Variant="Variant.Text" />
+                   </MudItem>
+                   <MudItem xs="12" sm="6">
+                       <MudTextField @bind-Value="@item.Secret" Label="Secret" Variant="Variant.Text" InputType="InputType.Password"></MudTextField>
+                   </MudItem>
+                   <MudItem xs="12">
+                       <div class="d-flex">
+                           <MudSelect T="RPCProtocol" Label="Protocol" @bind-Value="@item.Protocol" ToStringFunc="@converter" Adornment="Adornment.End" AdornmentText="://">
+                               <MudSelectItem Value="RPCProtocol.HTTP" />
+                               <MudSelectItem Value="RPCProtocol.HTTPS" />
+                               <MudSelectItem Value="RPCProtocol.WS" />
+                               <MudSelectItem Value="RPCProtocol.WSS" />
+                           </MudSelect>
+                       <MudTextField @bind-Value="@item.Host" Label="Host" Variant="Variant.Text"  />
+                        <MudTextField @bind-Value="@item.Port" Label="Port" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentText=":"></MudTextField>
+                        <MudTextField @bind-Value="@item.Path" Label="Path" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentText="/"></MudTextField>
+                        </div>
+                   </MudItem>
+                   
+                   <MudItem Class="d-flex justify-right">
+                       <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(e => ActivateProfile(item))">Activate Profile</MudButton>
+                   </MudItem>
+               </MudGrid>
+           </ChildContent>
+        </MudExpansionPanel>
+        }
+        
+    </MudExpansionPanels>
+</div>
+
+@code {
+
+    public AriaProfile[] profiles = { };
+    public AriaProfile? selectedProfile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        profiles = new AriaProfile[]{
+            new AriaProfile{ Name="RPI", Host="localhost", Port=6800, Secret="1234", Path="jsonrpc", Protocol=RPCProtocol.WS },
+            new AriaProfile{ Name="Office", Host="localhost", Port=6800, Secret="1234", Path="jsonrpc", Protocol=RPCProtocol.HTTP },
+        };
+        selectedProfile = profiles[0];
+    }
+
+    Func<RPCProtocol, string> converter = p => Enum.GetName(p)?.ToLower() ?? "";
+
+    public void ActivateProfile(AriaProfile p)
+    {
+        selectedProfile = p;
+    }
+
+}

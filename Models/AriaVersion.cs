@@ -1,10 +1,10 @@
 using System;
 
-namespace AriaBlazor
+namespace AriaBlazor.Models
 {
-    public class AriaVersion
+    public record AriaVersion
     {
-        public string Version {get;set;} = "";
-        public string[] EnabledFeatures {get;set;} = {};
+        public string Version {get;init;} = "";
+        public string[] EnabledFeatures {get;init;} = {};
     }
 }

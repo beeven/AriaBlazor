@@ -2,22 +2,31 @@
 @page "/download"
 @using AriaBlazor.Services
 @inject TaskManagerFactory managerFactory
-@inject ILogger Logger
-@inject ILoggerFactory LoggerFactory
 
 <div>
     Download page
     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateManager">Primary</MudButton>
 </div>
+<MudPaper>
+    <MudList Clickable="true">
+
+    </MudList>
+</MudPaper>
 
 @code {
 
+    @* protected override async Task OnInitializedAsync()
+    {
+        
+    } *@
     async Task CreateManager()
     {
-        var manager = managerFactory.CreateTaskManager(RPCProtocol.WebSocket, "ws://localhost:6800/jsonrpc", "wuwumimi");
+        var manager = managerFactory.CreateTaskManager(RPCProtocol.WS, "ws://localhost:6800/jsonrpc", "wuwumimi");
         await manager.InitializeAsync();
         var version = await manager.GetVersionAsync();
         System.Console.WriteLine(version);
+        var activeTasks = await manager.GetActiveAsync();
+
         
     }
 }

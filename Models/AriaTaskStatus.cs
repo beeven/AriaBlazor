@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace AriaBlazor
+namespace AriaBlazor.Models
 {
-    public class AriaTaskStatus
+    public record AriaTaskStatus
     {
         public string GID {get;set;} = "";
         public TaskStatus Status {get;set;}
@@ -39,7 +39,7 @@ namespace AriaBlazor
         Removed
     }
 
-    public class FileInfo 
+    public record FileInfo 
     {
         public int Index {get;set;}
         public string Path {get;set;} = "";

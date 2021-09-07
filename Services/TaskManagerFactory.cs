@@ -6,14 +6,15 @@ namespace AriaBlazor.Services
 {
     public class TaskManagerFactory
     {
+        private ITaskManager _manager;
         public ITaskManager CreateTaskManager(RPCProtocol protocol, string url, string secret)
         {
             ITaskManager manager;
             switch(protocol)
             {
-                case RPCProtocol.Http:
+                case RPCProtocol.HTTP:
                     throw new NotImplementedException();
-                case RPCProtocol.WebSocket:
+                case RPCProtocol.WS:
                     manager = new WebSocketTaskManager(url, secret);
                     break;
                 default:
@@ -22,13 +23,15 @@ namespace AriaBlazor.Services
             return manager;
         }
 
-        
+
 
     }
 
     public enum RPCProtocol
     {
-        Http,
-        WebSocket
+        HTTP,
+        HTTPS,
+        WS,
+        WSS
     }
 }
