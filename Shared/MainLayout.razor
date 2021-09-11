@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager navigationManager
 
 <MudThemeProvider/>
 <MudDialogProvider/>
@@ -11,13 +12,15 @@
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="2" @ref="drawer">
         <MudDrawerHeader Class="d-flex flex-column justify-center">
             <MudText Typo="Typo.h5" Class="mt-1" Align="Align.Center">AriaBlazor</MudText>
             <MudChip Color="Color.Success">Connected</MudChip>
         </MudDrawerHeader>
         <MudNavMenu >
-            <MudChip Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Link="/newTask">New Task</MudChip>
+            <div class="d-flex justify-center">
+            <MudChip Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="NavigateToNew">New Task</MudChip>
+            </div>
             <MudDivider Class="my-2"></MudDivider>
             <MudNavLink Href="/download" Icon="@Icons.Filled.Downloading">Downloading</MudNavLink>
             <MudNavLink Href="/pending" Icon="@Icons.Filled.AccessTime">Pending</MudNavLink>
@@ -45,10 +48,19 @@
 
 
 @code {
+
+    private MudDrawer drawer;
+
     bool _drawerOpen = true;
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    async Task NavigateToNew()
+    {
+        navigationManager.NavigateTo("/newTask");
+        await drawer.OnNavigation();
     }
 }
